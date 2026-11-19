@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro de Atendimentos</title>
+<style>
+:root{--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;--primary:#4f46e5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.06);color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1120;--card:#151e32;--text:#e8edf6;--muted:#94a3b8;--line:#26324a;--primary:#818cf8;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--shadow:0 1px 3px rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="light"]{--bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;--primary:#4f46e5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.06);color-scheme:light}
+:root[data-theme="dark"]{--bg:#0b1120;--card:#151e32;--text:#e8edf6;--muted:#94a3b8;--line:#26324a;--primary:#818cf8;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--shadow:0 1px 3px rgba(0,0,0,.4);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45}
+header{background:linear-gradient(120deg,#4f46e5,#7c3aed);color:#fff;padding:22px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+header h1{margin:0;font-size:1.4rem}header p{margin:2px 0 0;opacity:.85;font-size:.9rem}
+.tools button{margin:4px 0 4px 8px}
+main{max-width:1180px;margin:0 auto;padding:22px 20px 40px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));grid-gap:16px;margin-bottom:20px}
+.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:18px 20px}
+.stat{display:flex;align-items:center}
+.ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-right:14px}
+.stat b{display:block;font-size:1.9rem;line-height:1}.stat span{color:var(--muted);font-size:.85rem}
+.grid{display:grid;grid-template-columns:minmax(300px,380px) 1fr;grid-gap:20px;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.col{display:grid;grid-gap:20px}
+.two{display:grid;grid-template-columns:1fr 1fr;grid-gap:20px}@media(max-width:860px){.two{grid-template-columns:1fr}}
+h2{margin:0 0 14px;font-size:1.05rem}
+label{display:block;font-size:.8rem;color:var(--muted);margin:10px 0 4px}
+input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--primary);border-color:transparent}
+textarea{resize:vertical;min-height:90px}
+.seg{display:grid;grid-template-columns:1fr 1fr;grid-gap:8px}
+.seg input{display:none}
+.seg label{margin:0;text-align:center;padding:10px;border:1px solid var(--line);border-radius:10px;cursor:pointer;color:var(--text);font-size:.9rem}
+.seg input:checked+label.p{background:#f59e0b;color:#1c1400;border-color:#f59e0b}
+.seg input:checked+label.r{background:#22c55e;color:#04210f;border-color:#22c55e}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 16px;font-weight:600}
+.btn{background:var(--primary);color:#fff;width:100%;margin-top:16px}.btn:hover{filter:brightness(1.1)}
+.ghost{background:rgba(255,255,255,.18);color:#fff;padding:8px 14px;font-weight:500}.ghost:hover{background:rgba(255,255,255,.3)}
+.bars{display:flex;align-items:flex-end;height:190px;padding-top:20px}
+.day{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;margin:0 4px}
+.pair{display:flex;align-items:flex-end;height:100%;width:100%;justify-content:center}
+.bar{width:38%;max-width:26px;margin:0 2px;border-radius:6px 6px 0 0;min-height:2px;position:relative}
+.bar i{position:absolute;top:-17px;left:0;right:0;text-align:center;font-style:normal;font-size:.72rem;color:var(--muted)}
+.day small{color:var(--muted);font-size:.72rem;margin-top:6px}
+.legend{display:flex;font-size:.8rem;color:var(--muted);margin-top:10px}.legend span{margin-right:16px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+.row{display:grid;grid-template-columns:110px 1fr 28px;grid-gap:10px;align-items:center;font-size:.85rem;margin-bottom:8px}
+.row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track{background:var(--bg);border-radius:99px;height:8px;overflow:hidden}.track div{height:100%;background:var(--primary);border-radius:99px}
+.filters{display:flex;margin-bottom:12px}.filters input{flex:1;min-width:160px;margin-right:10px}.filters select{width:auto}
+.item{display:grid;grid-template-columns:1fr auto;grid-gap:6px 12px;padding:14px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.who{font-weight:600}.meta{color:var(--muted);font-size:.78rem}
+.prob{grid-column:1/-1;font-size:.9rem;white-space:pre-wrap;word-break:break-word}
+.badge{padding:3px 10px;border-radius:99px;font-size:.75rem;font-weight:600;align-self:start}
+.b-p{background:rgba(245,158,11,.2);color:var(--warn)}
+.b-r{background:rgba(34,197,94,.2);color:var(--ok)}
+.acts{grid-column:1/-1;display:flex}
+.acts button{padding:6px 12px;font-size:.8rem;background:var(--bg);color:var(--text);border:1px solid var(--line);margin-right:8px}
+.acts .del{color:var(--bad)}
+.empty{text-align:center;color:var(--muted);padding:30px 0}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:12px 20px;border-radius:12px;box-shadow:var(--shadow);max-width:90%;z-index:20}
+#modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:30}
+#modal[hidden],#toast[hidden]{display:none}
+.mbox{background:var(--card);padding:22px;border-radius:16px;max-width:380px;box-shadow:var(--shadow)}
+.macts{display:flex;justify-content:flex-end;margin-top:16px}
+.macts button{background:var(--bg);color:var(--text);border:1px solid var(--line);margin-left:8px}
+.macts #myes{background:var(--primary);color:#fff;border-color:var(--primary)}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>📋 Registro de Atendimentos</h1><p id="hoje"></p></div>
+  <div class="tools">
+    <button class="ghost" id="tema" type="button" title="Alternar tema">🌙 Escuro</button>
+    <button class="ghost" id="csv">Exportar CSV</button>
+    <button class="ghost" id="bkp">Backup (JSON)</button>
+    <button class="ghost" id="imp">Restaurar backup</button>
+    <input type="file" id="file" accept=".json" hidden>
+  </div>
+</header>
+
+<main>
+  <section class="cards">
+    <div class="card stat"><div class="ico" style="background:rgba(79,70,229,.2)">📞</div><div><b id="s-total">0</b><span>Atendimentos</span></div></div>
+    <div class="card stat"><div class="ico" style="background:rgba(34,197,94,.2)">✅</div><div><b id="s-ok">0</b><span>Finalizados</span></div></div>
+    <div class="card stat"><div class="ico" style="background:rgba(245,158,11,.2)">⏳</div><div><b id="s-pend">0</b><span>Pendentes</span></div></div>
+    <div class="card stat"><div class="ico" style="background:rgba(124,58,237,.2)">📈</div><div><b id="s-taxa">0%</b><span>Taxa de resolução</span></div></div>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Novo atendimento</h2>
+      <label for="nome">Nome</label><input id="nome" autocomplete="off">
+      <label for="loja">Loja</label><input id="loja" list="lojas" autocomplete="off"><datalist id="lojas"></datalist>
+      <label for="problema">Problema</label><textarea id="problema"></textarea>
+      <label>Situação</label>
+      <div class="seg">
+        <input type="radio" name="st" id="st-p" value="0" checked><label class="p" for="st-p">⏳ Pendente</label>
+        <input type="radio" name="st" id="st-r" value="1"><label class="r" for="st-r">✅ Resolvido</label>
+      </div>
+      <button class="btn" id="salvar">Salvar atendimento</button>
+    </section>
+
+    <div class="col">
+      <div class="two">
+        <section class="card">
+          <h2>Últimos 7 dias</h2>
+          <div class="bars" id="bars"></div>
+          <div class="legend"><span><i class="dot" style="background:var(--primary)"></i>Atendimentos</span><span><i class="dot" style="background:var(--ok)"></i>Finalizados</span></div>
+        </section>
+        <section class="card">
+          <h2>Lojas com mais atendimentos</h2>
+          <div id="top"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>Histórico</h2>
+        <div class="filters">
+          <input id="busca" placeholder="Buscar por nome, loja ou problema...">
+          <select id="filtro"><option value="">Todos</option><option value="0">Pendentes</option><option value="1">Resolvidos</option></select>
+        </div>
+        <div id="lista"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div id="toast" hidden></div>
+<div id="modal" hidden><div class="mbox"><p id="mtxt" style="margin:0"></p><div class="macts"><button id="mno">Cancelar</button><button id="myes">Confirmar</button></div></div></div>
+
+<script>
+let dados = [];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad = n => String(n).padStart(2, "0");
+const chaveDia = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const fmt = iso => new Date(iso).toLocaleString("pt-BR", {dateStyle: "short", timeStyle: "short"});
+
+$("hoje").textContent = new Date().toLocaleDateString("pt-BR", {weekday: "long", day: "numeric", month: "long", year: "numeric"});
+
+const temaSalvo = localStorage.getItem("tema");
+const temaInicial = temaSalvo || (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light");
+function aplicarTema(tema) {
+  document.documentElement.dataset.theme = tema;
+  localStorage.setItem("tema", tema);
+  $("tema").textContent = tema === "dark" ? "☀️ Claro" : "🌙 Escuro";
+  $("tema").setAttribute("aria-label", tema === "dark" ? "Ativar tema claro" : "Ativar tema escuro");
+}
+aplicarTema(temaInicial);
+$("tema").onclick = () => aplicarTema(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+
+async function api(url, method, corpo) {
+  const r = await fetch(url, {method: method || "GET", headers: {"Content-Type": "application/json"},
+                              body: corpo === undefined ? undefined : JSON.stringify(corpo)});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.erro || "Erro no servidor.");
+  return j;
+}
+let tt;
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => t.hidden = true, 4000); }
+function confirmar(txt) {
+  return new Promise(res => {
+    $("mtxt").textContent = txt; $("modal").hidden = false;
+    const fim = v => { $("modal").hidden = true; res(v); };
+    $("myes").onclick = () => fim(true); $("mno").onclick = () => fim(false);
+  });
+}
+async function carregar() {
+  try { dados = await api("/api/atendimentos"); render(); }
+  catch (e) { toast(e.message); }
+}
+
+$("salvar").onclick = async () => {
+  const nome = $("nome").value.trim(), loja = $("loja").value.trim(), problema = $("problema").value.trim();
+  if (!nome || !loja || !problema) { toast("Preencha nome, loja e problema."); return; }
+  try {
+    await api("/api/atendimentos", "POST", {nome, loja, problema,
+      resolvido: document.querySelector("input[name=st]:checked").value === "1"});
+    ["nome", "loja", "problema"].forEach(i => $(i).value = "");
+    $("st-p").checked = true;
+    await carregar(); $("nome").focus(); toast("Atendimento salvo ✔");
+  } catch (e) { toast(e.message); }
+};
+
+function render() {
+  const total = dados.length, ok = dados.filter(d => d.resolvido).length;
+  $("s-total").textContent = total; $("s-ok").textContent = ok; $("s-pend").textContent = total - ok;
+  $("s-taxa").textContent = total ? Math.round(ok / total * 100) + "%" : "0%";
+
+  const dias = [];
+  for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); dias.push(d); }
+  const serie = dias.map(d => { const l = dados.filter(x => x.data.slice(0, 10) === chaveDia(d));
+    return {d, t: l.length, r: l.filter(x => x.resolvido).length}; });
+  const max = Math.max(1, ...serie.map(s => s.t));
+  $("bars").innerHTML = serie.map(s => `<div class="day"><div class="pair">
+    <div class="bar" style="height:${s.t / max * 100}%;background:var(--primary)">${s.t ? `<i>${s.t}</i>` : ""}</div>
+    <div class="bar" style="height:${s.r / max * 100}%;background:var(--ok)">${s.r ? `<i>${s.r}</i>` : ""}</div></div>
+    <small>${pad(s.d.getDate())}/${pad(s.d.getMonth() + 1)}</small></div>`).join("");
+
+  const cont = {}; dados.forEach(d => cont[d.loja] = (cont[d.loja] || 0) + 1);
+  const top = Object.entries(cont).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  $("top").innerHTML = top.length ? top.map(([l, c]) => `<div class="row"><span>${esc(l)}</span><div class="track"><div style="width:${c / top[0][1] * 100}%"></div></div><b>${c}</b></div>`).join("")
+    : '<div class="empty">Sem dados ainda.</div>';
+  $("lojas").innerHTML = Object.keys(cont).map(l => `<option value="${esc(l)}">`).join("");
+
+  const q = $("busca").value.toLowerCase(), f = $("filtro").value;
+  const lista = dados.filter(d => (f === "" || String(+d.resolvido) === f) &&
+    (d.nome + " " + d.loja + " " + d.problema).toLowerCase().includes(q));
+  $("lista").innerHTML = lista.length ? lista.map(d => `<div class="item">
+    <div><div class="who">${esc(d.nome)} · ${esc(d.loja)}</div><div class="meta">${fmt(d.data)}</div></div>
+    <span class="badge ${d.resolvido ? "b-r" : "b-p"}">${d.resolvido ? "Resolvido" : "Pendente"}</span>
+    <div class="prob">${esc(d.problema)}</div>
+    <div class="acts"><button onclick="alternar(${d.id})">${d.resolvido ? "Reabrir" : "Marcar como resolvido"}</button>
+    <button class="del" onclick="excluir(${d.id})">Excluir</button></div></div>`).join("")
+    : '<div class="empty">Nenhum atendimento encontrado.</div>';
+}
+
+async function alternar(id) {
+  try { await api("/api/atendimentos/" + id + "/alternar", "POST"); await carregar(); } catch (e) { toast(e.message); }
+}
+async function excluir(id) {
+  if (!await confirmar("Excluir este atendimento?")) return;
+  try { await api("/api/atendimentos/" + id, "DELETE"); await carregar(); } catch (e) { toast(e.message); }
+}
+$("busca").oninput = render; $("filtro").onchange = render;
+
+async function exportar(tipo) {
+  try { const r = await api("/api/exportar/" + tipo, "POST"); toast("Arquivo salvo em: " + r.caminho); }
+  catch (e) { toast(e.message); }
+}
+$("csv").onclick = () => exportar("csv");
+$("bkp").onclick = () => exportar("json");
+$("imp").onclick = () => $("file").click();
+$("file").onchange = e => {
+  const arq = e.target.files[0]; e.target.value = "";
+  if (!arq) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    try {
+      const lista = JSON.parse(r.result);
+      if (!Array.isArray(lista)) throw new Error("Arquivo de backup inválido.");
+      if (!await confirmar("Substituir os " + dados.length + " atendimentos atuais pelos " + lista.length + " do backup?")) return;
+      const res = await api("/api/restaurar", "POST", lista);
+      await carregar(); toast(res.total + " atendimentos restaurados.");
+    } catch (err) { toast(err instanceof SyntaxError ? "Arquivo de backup inválido." : err.message); }
+  };
+  r.readAsText(arq);
+};
+carregar();
+</script>
+</body>
+</html>

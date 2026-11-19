@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+
+atendimentos.db
+atendimentos.spec
+files.zip
+build/
+dist/
+build-exe.ps1
+executar-desktop.ps1
+
+.venv/
+venv/
